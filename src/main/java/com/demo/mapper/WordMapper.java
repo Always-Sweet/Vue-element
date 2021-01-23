@@ -1,6 +1,7 @@
 package com.demo.mapper;
 
 import com.demo.entity.Word;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,5 +15,7 @@ import java.util.List;
 @Repository
 public interface WordMapper {
 
-    List<Word> get();
+    Word get(@Param("id") String id);
+
+    List<Word> query(@Param("content") String content);
 }

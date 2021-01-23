@@ -19,7 +19,27 @@ public class WordService {
     @Autowired
     private WordMapper wordMapper;
 
-    public List<Word> get() {
-        return wordMapper.get();
+    /**
+     * 查找单词（唯一）
+     *
+     * @param id 单词主键
+     * @return
+     * @author zhangcb
+     * @time 2020/01/20
+     */
+    public Word get(String id) {
+        return wordMapper.get(id);
+    }
+
+    /**
+     * 搜索单词（模糊）
+     *
+     * @param searchValue 词名
+     * @return
+     * @author zhangcb
+     * @time 2020/01/20
+     */
+    public List<Word> query(String searchValue) {
+        return wordMapper.query(searchValue);
     }
 }

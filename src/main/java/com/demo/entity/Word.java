@@ -17,19 +17,13 @@ public class Word {
      * 主键
      */
     @ApiModelProperty(value = "主键", name = "id", example = "id")
-    private String id;
+    private String wordId;
 
     /**
      * 单词
      */
     @ApiModelProperty(value = "单词", name = "content", example = "-")
     private String content;
-
-    /**
-     * 词性 Dic Constant.Classification
-     */
-    @ApiModelProperty(value = "词性", name = "partOfSpeech", example = "1")
-    private String partOfSpeech;
 
     /**
      * 分类
@@ -44,12 +38,12 @@ public class Word {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String insertTime;
 
-    public String getId() {
-        return id;
+    public String getWordId() {
+        return wordId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setWordId(String wordId) {
+        this.wordId = wordId;
     }
 
     public String getContent() {
@@ -58,14 +52,6 @@ public class Word {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getPartOfSpeech() {
-        return partOfSpeech;
-    }
-
-    public void setPartOfSpeech(String partOfSpeech) {
-        this.partOfSpeech = partOfSpeech;
     }
 
     public String getClassification() {
