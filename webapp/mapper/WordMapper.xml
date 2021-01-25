@@ -15,4 +15,63 @@
             </if>
         </where>
     </select>
+
+    <insert id="save">
+        <selectKey keyProperty="wordId" resultType="java.lang.String" order="BEFORE">
+            select UUID()
+        </selectKey>
+        insert into word (
+        <trim suffixOverrides=",">
+            <if test="wordId != null and wordId != ''">
+                word_id,
+            </if>
+            <if test="content != null and content != ''">
+                content,
+            </if>
+            <if test="classification != null and classification != ''">
+                classification,
+            </if>
+            <if test="insertTime != null and insertTime != ''">
+                insertTime,
+            </if>
+        </trim>
+        ) values (
+        <trim suffixOverrides=",">
+            <if test="wordId != null and wordId != ''">
+                #{wordId},
+            </if>
+            <if test="content != null and content != ''">
+                #{content},
+            </if>
+            <if test="classification != null and classification != ''">
+                #{classification},
+            </if>
+            <if test="insertTime != null and insertTime != ''">
+                #{insertTime},
+            </if>
+        </trim> ) where word_id = #{wordId}
+    </insert>
+
+    <update id="update" parameterType="com.demo.entity.Word">
+        update word set
+        <trim suffixOverrides=",">
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="classification != null and classification != ''">
+                classification = #{classification},
+            </if>
+            <if test="insertTime != null and insertTime != ''">
+                insertTime = #{insertTime},
+            </if>
+        </trim>
+        where word_id = #{wordId}
+    </update>
+
+    <delete id="delete" parameterType="com.demo.entity.Word">
+        delete from word where word_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>

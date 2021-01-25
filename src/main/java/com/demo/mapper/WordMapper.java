@@ -18,4 +18,10 @@ public interface WordMapper {
     Word get(@Param("id") String id);
 
     List<Word> query(@Param("content") String content);
+
+    void save(Word word);
+
+    int update(Word word);
+
+    int delete(List<String> ids);
 }

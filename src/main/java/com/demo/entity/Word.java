@@ -1,8 +1,11 @@
 package com.demo.entity;
 
+import com.demo.utils.validatorgroup.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 单词 entity
@@ -17,12 +20,14 @@ public class Word {
      * 主键
      */
     @ApiModelProperty(value = "主键", name = "id", example = "id")
+    @NotBlank(message = "主键不能为空", groups = {ModifyWordCheck.class})
     private String wordId;
 
     /**
      * 单词
      */
     @ApiModelProperty(value = "单词", name = "content", example = "-")
+    @NotBlank(message = "单词不能为空", groups = {SaveWordCheck.class, ModifyWordCheck.class})
     private String content;
 
     /**
