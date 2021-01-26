@@ -11,7 +11,10 @@
 <body>
     <div id="app">
         <el-row style="width: 800px; margin: 0 auto;">
-            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+            <el-menu :default-active="activeIndex"
+                     mode="horizontal"
+                     @select="handleSelect"
+                     style="margin: 0 0 10px">
                 <el-menu-item index="1">首页</el-menu-item>
     <!--            <el-submenu index="2">-->
     <!--                <template slot="title">我的工作台</template>-->
@@ -29,32 +32,65 @@
                 <el-menu-item index="4">关于我们</el-menu-item>
             </el-menu>
             <el-row v-show="wordVisible">
-                <el-col>
-                    <el-table
-                            :data="wordList"
-                            style="width: 100%">
-                        <el-table-column
-                                prop="sn"
-                                label="序号"
-                                width="180"
-                                align="center">
-                            <template slot-scope="scope">
-                                <div>{{ scope.$index + 1 }}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                prop="content"
-                                label="单词"
-                                width="180"
-                                align="center">
-                        </el-table-column>
-                        <el-table-column
-                                prop="classification"
-                                label="分类"
-                                align="center">
-                        </el-table-column>
-                    </el-table>
-                </el-col>
+                <el-row style="margin: 0 0 10px">
+                    <el-col :span="8">
+                        <el-button size="mini" @click="" type="primary">新增</el-button>
+                        <el-button size="mini" @click="" type="danger">批量删除</el-button>
+                    </el-col>
+                    <el-col :span="16" style="text-align: right">
+                        <el-input v-model="searchValue"
+                                  size="mini"
+                                  placeholder="请输入内容"
+                                  style="width: 350px"
+                                  clearable
+                        ></el-input>
+                        <el-button size="mini"
+                                   @click="search"
+                                   type="primary"
+                                   style="margin-left: 10px"
+                        >搜索</el-button>
+                    </el-col>
+                </el-row>
+                <el-table
+                        :data="wordList"
+                        style="width: 100%; margin: 0 0 10px">
+                    <el-table-column
+                            prop="sn"
+                            label="序号"
+                            width="180"
+                            align="center">
+                        <template slot-scope="scope">
+                            <div>{{ scope.$index + 1 }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="content"
+                            label="单词"
+                            width="180"
+                            align="center">
+                    </el-table-column>
+                    <el-table-column
+                            prop="classification"
+                            label="分类"
+                            align="center">
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button size="mini" @click="" type="primary">编辑</el-button>
+                            <el-button size="mini" @click="" type="danger">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[5, 20, 50, 100]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="totalPage"
+                        style="text-align: right;">
+                </el-pagination>
             </el-row>
         </el-row>
     </div>
@@ -64,29 +100,31 @@
             data: {
                 activeIndex: "1",
                 wordVisible: true, // 单词Tab
-                wordList: [] // 单词列表
+                wordList: [], // 单词列表
+                currentPage: 1,
+                pageSize: 5,
+                totalPage: 0,
+                searchValue: "", // 搜索内容
             },
             created() {
                 this.initData()
             },
             methods: {
-                handleSelect(key, keyPath) {
-                    this.activeIndex = key;
-                    if (key === '1') {
-                        this.wordVisible = true;
-                    } else {
-                        this.wordVisible = false;
-                    }
-                    console.log(key, keyPath);
-                },
                 initData() {
+                    this.loadData();
+                },
+                loadData() {
+                    this.currentPage = 1;
                     axios({
                         method: "GET",
-                        url: "word/query",
+                        url: "word/query?searchValue=" + this.searchValue +
+                            "&currentPage=" + this.currentPage +
+                            "&pageSize=" + this.pageSize,
                         data: {}
                     }).then(res => {
                         if (res.data.code === '100') {
                             this.wordList = res.data.result;
+                            this.totalPage = 10;
                         } else {
                             this.$message({
                                 message: res.data.message,
@@ -99,6 +137,24 @@
                             type: 'warning'
                         });
                     });
+                },
+                handleSelect(key, keyPath) {
+                    this.activeIndex = key;
+                    if (key === '1') {
+                        this.wordVisible = true;
+                    } else {
+                        this.wordVisible = false;
+                    }
+                    console.log(key, keyPath);
+                },
+                handleSizeChange(val) {
+                    this.pageSize = val;
+                },
+                handleCurrentChange(val) {
+                    this.currentPage = val;
+                },
+                search() {
+                    this.loadData();
                 }
             }
         })
